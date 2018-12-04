@@ -1,0 +1,52 @@
+John Carter
+12-3-2018
+jcarter6@una.edu
+
+
+1. Select the top 10 most occurring birthdays in our company ordered from greatest to least.
+
+SELECT birth_date, COUNT(*) 
+FROM employees 
+GROUP BY birth_date 
+ORDER BY COUNT(*) desc LIMIT 10;
+
+2. 
+SELECT salaries.emp_no, employees.first_name, employees.last_name, salaries.salary 
+FROM employees 
+LEFT JOIN salaries ON employees.emp_no = salaries.emp_no 
+WHERE salaries.to_date > NOW() LIMIT 10;
+
+3. 
+SELECT AVG(salaries.salary) 
+FROM salaries WHERE salaries.to_date > NOW() AND salaries.from_date < NOW();
+
+
+4. Select the first 10 employees employee number, first name, and last name whose current salary is greater than the average salary of all employees.  
+Order it by salaries and then employee number.  DO NOT copy paste 72012.2359 thats too easy.
+
+SELECT salaries.emp_no, employees.first_name, employees.last_name, salaries.salary 
+FROM employees 
+LEFT JOIN salaries ON employees.emp_no = salaries.emp_no 
+WHERE salaries.salary > (SELECT AVG(salaries.salary) FROM salaries WHERE salaries.to_date > NOW() and salaries.from_date < NOW())
+ORDER BY salary, salaries.emp_no
+LIMIT 10;
+
+
+5.Now select the first 20 employees employee no, first name, last name, the department they work for and their current salary.
+
+SELECT salaries.emp_no, employees.first_name, employees.last_name, departments.dept_name, salaries.salary from employees 
+LEFT JOIN salaries on employees.emp_no = salaries.emp_no 
+LEFT JOIN dept_emp on employees.emp_no = dept_emp.emp_no
+LEFT JOIN departments on dept_emp.dept_no = departments.dept_no
+WHERE salaries.to_date > NOW() LIMIT 20;
+
+
+6.Select the department and the average current salary for all the employees in it.  Order it by the avg salary in increasing order.
+
+SELECT departments.dept_name, AVG(salaries.salary) from employees 
+    INNER JOIN salaries ON employees.emp_no = salaries.emp_no 
+    INNER JOIN dept_emp ON employees.emp_no = dept_emp.emp_no
+    INNER JOIN departments ON dept_emp.dept_no = departments.dept_no
+    WHERE salaries.to_date > NOW() and salaries.from_date < NOW() 
+    GROUP BY departments.dept_name
+    ORDER BY AVG(salaries.salary) ASC;
